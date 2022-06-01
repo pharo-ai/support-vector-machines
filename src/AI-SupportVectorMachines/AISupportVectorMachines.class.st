@@ -19,8 +19,14 @@ AISupportVectorMachines >> bias [
 	^ bias 
 ]
 
+{ #category : #accessing }
+AISupportVectorMachines >> bias: anInteger [ 
+	bias := anInteger
+]
+
 { #category : #api }
-AISupportVectorMachines >> decisionFunction: inputMatrix [
+AISupportVectorMachines >> decisionBoundary2: inputMatrix [
+
 	"h(x) = sign(Σ α_i * y_i * <x_i.x> + b)
 	
 	i: stands for each training example
@@ -28,20 +34,37 @@ AISupportVectorMachines >> decisionFunction: inputMatrix [
 	α_i: dual variable --> Lagrangian multiplier -->  It's a scalar
 	x_i: feature vector corresponding to the ith training example. It's a vector cause we have multiple features
 	<x_i.x>: scalar product
-	
 	---------------------------------------------------------------------
-	
 	sign(<w.z> + b) = sign(∑ α_i * y * <x.z> + b)
 	
 	If this function returns 1, then test instance z is classified
 as positive; otherwise, it is classified as negative.
-	
-	
 	"
+
+	1 to: inputMatrix size do: [ :x1 | 
+		1 to: inputMatrix size do: [ :x2 | 
+			x1 * x2 ] ]
+]
+
+{ #category : #api }
+AISupportVectorMachines >> decisionBoundary: inputMatrix [
+
+	"h(x) = sign(Σ α_i * y_i * <x_i.x> + b)
 	
-	| sum |
-	sum := inputMatrix collect: [ :row |(lagrangianMultiplier*row) sum + bias ].
-	^ sum
+	i: stands for each training example
+	y_i: is just a label (1 or -1). It's a scalar 
+	α_i: dual variable --> Lagrangian multiplier -->  It's a scalar
+	x_i: feature vector corresponding to the ith training example. It's a vector cause we have multiple features
+	<x_i.x>: scalar product
+	---------------------------------------------------------------------
+	sign(<w.z> + b) = sign(∑ α_i * y * <x.z> + b)
+	
+	If this function returns 1, then test instance z is classified
+as positive; otherwise, it is classified as negative.
+	"
+
+	weights := inputMatrix collect: [ :row | 
+		        (lagrangianMultiplier * row) sum + bias ]
 ]
 
 { #category : #api }
@@ -50,6 +73,9 @@ AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 	self initializeWeightsOfSize: (inputMatrix anyOne size).
 
 	numberOfIterations := 0.
+	
+
+	
 ]
 
 { #category : #accessing }
@@ -61,11 +87,22 @@ AISupportVectorMachines >> initializeWeightsOfSize: anInteger [
 ]
 
 { #category : #accessing }
+AISupportVectorMachines >> kkt2Y: output [
+
+^ lagrangianMultiplier * output 
+]
+
+{ #category : #accessing }
 AISupportVectorMachines >> lagrangianMultiplier [
 
 	"take the derivative wrt a and set it equal to zero"
 
 	
+]
+
+{ #category : #accessing }
+AISupportVectorMachines >> lagrangianMultiplier: anUndefinedObject [ 
+	lagrangianMultiplier := anUndefinedObject  
 ]
 
 { #category : #accessing }
@@ -87,12 +124,48 @@ AISupportVectorMachines >> numberOfIterations: anInteger [
 AISupportVectorMachines >> predict: inputMatrix [
 
 	| prediction |
-	prediction := self decisionFunction: inputMatrix.
+	prediction := self decisionBoundary: inputMatrix.
 
 	^ prediction collect: [ :each | 
-		  each > 0
+		  each > 0 
 			  ifTrue: [ 1 ]
 			  ifFalse: [ -1 ] ]
+]
+
+{ #category : #api }
+AISupportVectorMachines >> signX: inputMatrix y: output [
+
+	"h(x) = sign(Σ α_i * y_i * <x_i.x> + b)
+	
+	i: stands for each training example
+	y_i: is just a label (1 or -1). It's a scalar 
+	α_i: dual variable --> Lagrangian multiplier -->  It's a scalar
+	x_i: feature vector corresponding to the ith training example. It's a vector cause we have multiple features
+	<x_i.x>: scalar product
+	---------------------------------------------------------------------
+	sign(<w.z> + b) = sign(∑ α_i * y * <x.z> + b)
+	
+	If this function returns 1, then test instance z is classified
+as positive; otherwise, it is classified as negative.
+	"
+
+	"1 to: inputMatrix size do: [ :x1 | 
+		1 to: inputMatrix size do: [ :x2 | 
+			sign := lagrangianMultiplier  * x1 * x2 ] ]"
+	
+	| w |
+	w := self weightsDualX: inputMatrix y: output .
+	
+	^ inputMatrix collect: [:row |
+		(w * row) sum + bias ]
+]
+
+{ #category : #api }
+AISupportVectorMachines >> supportVectorsX: inputMatrix y:output [
+
+ output * self decisionBoundary2: inputMatrix 
+
+		
 ]
 
 { #category : #accessing }
@@ -103,6 +176,6 @@ AISupportVectorMachines >> weights [
 { #category : #accessing }
 AISupportVectorMachines >> weightsDualX: inputMatrix y: output [
 
-
-	^ lagrangianMultiplier*output*inputMatrix 
+	weights := inputMatrix with: output collect: [:rowIn :rowOut|
+		(lagrangianMultiplier * rowOut * rowIn) sum ]
 ]
