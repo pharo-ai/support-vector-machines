@@ -64,18 +64,24 @@ AISupportVectorMachinesTest >> testFitEmptyOutputValues [
 { #category : #tests }
 AISupportVectorMachinesTest >> testFitXY [
 
-	| input output |
+	| input output actualOutput testInput testOutput |
 	
-	input := #( #( 1 ) #( 2 ) #( 3 ) #( -1 ) #( -2 ) #( -3 ) ).
-	
-	output :=
+	input := #( #( 0 0 ) #( 1 1 ) #( 3 3 ) #( 4 4 ) ).
+	output := #( 1 1 -1 -1 ).
+
 	model learningRate: 0.1.
 	model numberOfIterations: 1000.
-		
-		
-		
 
+	"training"
 	model fitX: input y: output.
+
+	testInput := #( #( -1 -1 ) #( 5 5 ) ).
+	testOutput := #( 1 -1 ).
+
+	"testing"
+	actualOutput := model predict: testInput.
+
+	self assert: actualOutput equals: testOutput
 ]
 
 { #category : #tests }

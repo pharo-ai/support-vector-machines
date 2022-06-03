@@ -9,7 +9,8 @@ Class {
 		'learningRate',
 		'bias',
 		'numberOfIterations',
-		'lagrangianMultiplier'
+		'lagrangianMultiplier',
+		'supportVectorsCollection'
 	],
 	#category : #'AI-SupportVectorMachines'
 }
@@ -22,6 +23,24 @@ AISupportVectorMachines >> bias [
 { #category : #accessing }
 AISupportVectorMachines >> bias: anInteger [ 
 	bias := anInteger
+]
+
+{ #category : #accessing }
+AISupportVectorMachines >> biasDualX: inputMatrix y: output [
+
+	"b = 1/Nsv * Σ (y_j - w * x_j) 
+	
+	where j is number of support vectors"
+
+	| supportVectorsSum |
+	supportVectorsSum := inputMatrix
+		                     with: output
+		                     collect: [ :x :y | y - (weights * x) ].
+	bias := supportVectorsSum average "(bias :=) instead of (^)"
+
+
+	"supportVectorsSum := supportVectorsCollection with: output collect: [ :x :y | y - (weights * x)].
+	bias := supportVectorsSum average ""(bias :=) instead of (^)"""
 ]
 
 { #category : #api }
@@ -41,9 +60,16 @@ AISupportVectorMachines >> decisionBoundary2: inputMatrix [
 as positive; otherwise, it is classified as negative.
 	"
 
+	| dot |
 	1 to: inputMatrix size do: [ :x1 | 
 		1 to: inputMatrix size do: [ :x2 | 
-			x1 * x2 ] ]
+			dot := x1 * x2.
+			
+			supportVectorsCollection add: dot
+
+	 ] ].
+
+	
 ]
 
 { #category : #api }
@@ -75,6 +101,15 @@ AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 	numberOfIterations := 0.
 	
 
+	self lagrangianMultiplier: 1.
+]
+
+{ #category : #api }
+AISupportVectorMachines >> hypothesisFunction: inputMatrix [
+
+	| constraints |
+	constraints := inputMatrix collect: [ :e | (weights * e) sum + bias ].
+
 	
 ]
 
@@ -96,6 +131,8 @@ AISupportVectorMachines >> kkt2Y: output [
 AISupportVectorMachines >> lagrangianMultiplier [
 
 	"take the derivative wrt a and set it equal to zero"
+	
+	
 
 	
 ]
@@ -124,9 +161,9 @@ AISupportVectorMachines >> numberOfIterations: anInteger [
 AISupportVectorMachines >> predict: inputMatrix [
 
 	| prediction |
-	prediction := self decisionBoundary: inputMatrix.
+	prediction := self hypothesisFunction: inputMatrix.
 
-	^ prediction collect: [ :each | 
+	^ prediction asOrderedCollection collect: [ :each | 
 		  each > 0 
 			  ifTrue: [ 1 ]
 			  ifFalse: [ -1 ] ]
@@ -153,11 +190,18 @@ as positive; otherwise, it is classified as negative.
 		1 to: inputMatrix size do: [ :x2 | 
 			sign := lagrangianMultiplier  * x1 * x2 ] ]"
 	
-	| w |
-	w := self weightsDualX: inputMatrix y: output .
+	"| w |
+	w := self weightsDualX: inputMatrix y: output ."
 	
 	^ inputMatrix collect: [:row |
-		(w * row) sum + bias ]
+		(weights * row) sum + bias ] "weights instead of w"
+]
+
+{ #category : #accessing }
+AISupportVectorMachines >> supportVectorsCollection [
+
+	supportVectorsCollection := Dictionary new.
+	^ supportVectorsCollection
 ]
 
 { #category : #api }
