@@ -6,9 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'weights',
-		'learningRate',
 		'bias',
-		'numberOfIterations',
 		'lagrangianMultiplier',
 		'supportVectorsCollection'
 	],
@@ -64,12 +62,8 @@ as positive; otherwise, it is classified as negative.
 	1 to: inputMatrix size do: [ :x1 | 
 		1 to: inputMatrix size do: [ :x2 | 
 			dot := x1 * x2.
-			
-			supportVectorsCollection add: dot
-
-	 ] ].
-
-	
+			supportVectorsCollection add: dot ] ]. 
+	supportVectorsCollection with
 ]
 
 { #category : #api }
@@ -96,12 +90,10 @@ as positive; otherwise, it is classified as negative.
 { #category : #api }
 AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 
-	self initializeWeightsOfSize: (inputMatrix anyOne size).
-
-	numberOfIterations := 0.
-	
-
-	self lagrangianMultiplier: 1.
+	| m p q |
+	m := inputMatrix size.
+	p := self pX: inputMatrix y: outputVector.
+	q := [ 1 to: inputMatrix size do:[ ^ -1 ] ] asOrderedCollection.
 ]
 
 { #category : #api }
@@ -142,19 +134,32 @@ AISupportVectorMachines >> lagrangianMultiplier: anUndefinedObject [
 	lagrangianMultiplier := anUndefinedObject  
 ]
 
-{ #category : #accessing }
-AISupportVectorMachines >> learningRate [
-	^ learningRate
-]
+{ #category : #api }
+AISupportVectorMachines >> pX: inputMatrix y: outputVector [
 
-{ #category : #accessing }
-AISupportVectorMachines >> learningRate: aNumber [ 
-	learningRate := aNumber
-]
+	"dot each x with its y"
 
-{ #category : #accessing }
-AISupportVectorMachines >> numberOfIterations: anInteger [
-	numberOfIterations := anInteger 
+	| innerProducts result |
+	supportVectorsCollection := OrderedCollection new.
+
+	inputMatrix
+		with: outputVector
+		collect: [ :x :y | supportVectorsCollection add: x * y ].
+
+	innerProducts := OrderedCollection new.
+
+	"dot each xy with the rest of xys"
+	"1 to: supportVectorsCollection size do: [ :xy1 | 
+		1 to: supportVectorsCollection size do: [ :xy2 | 
+			dot := xy1 * xy2.
+			innerProducts add: dot.
+			] ]."
+
+	result := innerProducts pairsDo: [ :xy1 :xy2 | 
+		          result := xy1 * xy2.
+		          innerProducts add: result ]. 
+	^ innerProducts
+	
 ]
 
 { #category : #api }
