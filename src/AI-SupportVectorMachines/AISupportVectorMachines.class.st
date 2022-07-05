@@ -1,5 +1,5 @@
 "
-I implement the hard margin of Support Vector Machines. I'll be refactored to strategy pattern for the next mergin (soft margin)
+I implement the hard margin of Support Vector Machines with GD. I'll be refactored to strategy pattern for the next margin (soft margin)
 "
 Class {
 	#name : #AISupportVectorMachines,
@@ -90,10 +90,17 @@ as positive; otherwise, it is classified as negative.
 { #category : #api }
 AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 
-	| m p q |
+	| m p q b h |
 	m := inputMatrix size.
 	p := self pX: inputMatrix y: outputVector.
-	q := [ 1 to: inputMatrix size do:[ ^ -1 ] ] asOrderedCollection.
+	q := [ 1 to: inputMatrix size do: [ ^ -1 ] ] asOrderedCollection.
+	"A := "
+	b := 0.
+	"G := "
+	h := [ 1 to: inputMatrix size do: [ ^ 0 ] ] asOrderedCollection.
+	"solution := import from Python"
+	"alphas := solution collect: 'x'."
+	
 ]
 
 { #category : #api }

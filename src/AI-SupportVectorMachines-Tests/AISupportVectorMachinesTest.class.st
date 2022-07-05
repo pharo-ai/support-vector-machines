@@ -20,7 +20,7 @@ AISupportVectorMachinesTest >> setUp [
 { #category : #tests }
 AISupportVectorMachinesTest >> supportVectorMachines [
 
-	^ AISupportVectorMachines new
+	^ AISupportVectorMachinesQP new
 ]
 
 { #category : #tests }
@@ -96,14 +96,18 @@ AISupportVectorMachinesTest >> testInitializeWeightsOfSize [
 { #category : #test }
 AISupportVectorMachinesTest >> testPXY [
 
-	| input output pResult pxMethod|
+	| input output pResult pxMethod |
+	
 	input := #( #( 0 0 ) #( 1 1 ) #( 3 3 ) #( 4 4 ) ).
 	output := #( 1 1 -1 -1 ).
 
-	pResult := #(#( 0 0 ) #( 1 1 ) #( -3 -3 ) #( -4 -4 )) asOrderedCollection.
-	
+
+	pResult := #( #( 0 0 ) #( 1 1 ) #( -3 -3 ) #( -4 -4 ) )
+		           asOrderedCollection.
+
 	pxMethod := model pX: input y: output.
 	self assert: pxMethod equals: pResult.
+		self skip.
 ]
 
 { #category : #tests }
