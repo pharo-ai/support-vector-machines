@@ -27,7 +27,7 @@ AISupportVectorMachinesSoftSGDTest >> testCalculateCostGradientXY [
 	model weights: w.
 	model regularizationStrenght: 10000.
 	res := model calculateCostGradientX: x y: y.
-	self assert: res equals: {(10009/3). (20006/3). 10001}
+	self assert: res asArray equals: {(10009/3). (20006/3). 10001} asArray
 ]
 
 { #category : #test }
@@ -65,4 +65,24 @@ AISupportVectorMachinesSoftSGDTest >> testComputeCostXY [
 	model regularizationStrenght: 10000.
 	res := model computeCostX: x y: y.
 	self assert: res equals: 10021/3 "3340.333333333333"
+]
+
+{ #category : #tests }
+AISupportVectorMachinesSoftSGDTest >> testSgdXY [
+
+	| x y w res |
+	x := #( #( 1 2 3 ) #( 4 5 6 ) #( 7 8 9 ) ).
+	y := #( -1 1 1 ).
+	w := #( 3 2 1 ).
+	model weights: w.
+	model regularizationStrenght: 10000.
+
+	model learningRate: 1e-6.
+	model maxEpochs: 5000.
+	res := model sgdX: x y: y.
+	
+	 model weights
+		with:  #( 1.44873055 0.23656344 -0.97560368 )
+		do: [ :real :expected |
+			self assert: real closeTo: expected ]
 ]

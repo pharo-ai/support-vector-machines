@@ -1,9 +1,14 @@
+"
+I implement the soft margin of Support Vector Machines with Stochastic Gradient Descent.
+"
 Class {
 	#name : #AISupportVectorMachinesSoftSGD,
 	#superclass : #Object,
 	#instVars : [
 		'weights',
-		'regularizationStrenght'
+		'regularizationStrenght',
+		'maxEpochs',
+		'learningRate'
 	],
 	#category : #'AI-SupportVectorMachines'
 }
@@ -11,30 +16,27 @@ Class {
 { #category : #accessing }
 AISupportVectorMachinesSoftSGD >> calculateCostGradientX: inputMatrix y: outputVector [
 
-	| distance dw di numberOfRows |
+	| distance dw di numberOfRows output input |
 	numberOfRows := inputMatrix size.
-	distance := self calculateDistancesForX: (inputMatrix asArray) y: (outputVector asArray).
 
-	dw := (OrderedCollection new: outputVector size withAll: 0) asArray.
-	
-	distance doWithIndex: [ :d :ind | d < 0
-		ifTrue: [ di := weights ] 
-		ifFalse: [di :=  weights - (regularizationStrenght * (inputMatrix at: ind ) * (outputVector at: ind )) ].
-		dw := dw + di].
-		dw := dw / outputVector size.
+	outputVector isCollection
+		ifTrue: [ output := outputVector.
+			input := inputMatrix ]
+		ifFalse: [ output := outputVector asOrderedCollection.
+			input := Array with: inputMatrix ].
+
+	distance := self calculateDistancesForX: input y: output.
+
+	dw := OrderedCollection new: weights size withAll: 0.
+
+	distance doWithIndex: [ :d :ind | 
+		di := d <= 0
+			ifTrue: [ weights ]
+			ifFalse: [ weights - (regularizationStrenght * (input at: ind) * (output at: ind)) ].
+		dw := dw + di ].
+	dw := dw / output size.
+
 	^ dw
-
-
-
-"	1 to: distance size do: [ :i |
-		1halt.
-		[
-		distance collect: [ :each | each < 0
-				      ifTrue: [ di := weights ]
-				      ifFalse: [ weights - (regularizationStrenght * (inputMatrix at: i) * (outputVector at: i)) ]
-				].
-						dw := dw + di ] ].
-	"
 ]
 
 { #category : #'as yet unclassified' }
@@ -62,8 +64,36 @@ AISupportVectorMachinesSoftSGD >> computeCostX: inputMatrix y: outputVector [
 ]
 
 { #category : #accessing }
+AISupportVectorMachinesSoftSGD >> learningRate: aNumber [ 
+	learningRate := aNumber  
+]
+
+{ #category : #accessing }
+AISupportVectorMachinesSoftSGD >> maxEpochs: aNumber [ 
+	maxEpochs := aNumber  
+]
+
+{ #category : #accessing }
 AISupportVectorMachinesSoftSGD >> regularizationStrenght: aNumber [ 
 	regularizationStrenght := aNumber 
+]
+
+{ #category : #'as yet unclassified' }
+AISupportVectorMachinesSoftSGD >> sgdX: inputMatrix y: outputVector [
+
+	| ascent |
+	
+	weights := OrderedCollection new: inputMatrix size withAll: 0.
+	1 to: maxEpochs do: [ :epoch |  
+		"1halt."
+		inputMatrix doWithIndex: [ :x :ind | 
+			ascent := self calculateCostGradientX: x y: (outputVector at: ind).
+			weights := weights - (learningRate * ascent) ] ]
+]
+
+{ #category : #accessing }
+AISupportVectorMachinesSoftSGD >> weights [
+	^weights  
 ]
 
 { #category : #accessing }
