@@ -68,8 +68,29 @@ AISupportVectorMachinesSoftSGDTest >> testComputeCostXY [
 ]
 
 { #category : #tests }
+AISupportVectorMachinesSoftSGDTest >> testSgdWithStoppageCriterionXY [
+
+	| x y w res |
+	x := #( #( 1 2 3 ) #( 4 5 6 ) #( 7 8 9 ) ).
+	y := #( -1 1 1 ).
+	w := #( 3 2 1 ).
+	model weights: w.
+	model regularizationStrenght: 10000.
+
+	model learningRate: 1e-6.
+	model maxEpochs: 5000.
+	res := model sgdWithStoppageCriterionX: x y: y.
+	
+	 model weights
+		with:  #( 1.44873055 0.23656344 -0.97560368 )
+		do: [ :real :expected |
+			self assert: real closeTo: expected ]
+]
+
+{ #category : #tests }
 AISupportVectorMachinesSoftSGDTest >> testSgdXY [
 
+"temporary"
 	| x y w res |
 	x := #( #( 1 2 3 ) #( 4 5 6 ) #( 7 8 9 ) ).
 	y := #( -1 1 1 ).
