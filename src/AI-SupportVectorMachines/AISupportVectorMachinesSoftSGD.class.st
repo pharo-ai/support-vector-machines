@@ -94,31 +94,29 @@ AISupportVectorMachinesSoftSGD >> sgdWithStoppageCriterionX: inputMatrix y: outp
 	nth := 0.
 	prev_cost := Float infinity.
 	cost_threshold := 0.01.
-	weights := OrderedCollection new: inputMatrix shape1 withAll: 0.
-	1 to: maxEpochs do: [ :epoch |
+	weights := OrderedCollection new: inputMatrix numberOfColumns withAll: 0.
+	1 to: maxEpochs do: [ :epoch | 
 		inputMatrix shuffled.
 		outputVector shuffled.
 		inputMatrix doWithIndex: [ :x :ind | 
 			ascent := self calculateCostGradientX: x y: (outputVector at: ind).
 			weights := weights - (learningRate * ascent) ].
-			(epoch = (2 ** nth) or: [ epoch = (maxEpochs - 1) ]) ifTrue: [ 
-				cost := self computeCostX: inputMatrix y: outputVector.
-				(prev_cost - cost) abs < (cost_threshold * prev_cost) ifTrue: [  weightsAllAlong add: weights].
-				prev_cost := cost.
-				nth := nth + 1 
-				] 
-	].
+		(epoch = (2 ** nth) or: [ epoch = (maxEpochs - 1) ]) ifTrue: [ 
+			cost := self computeCostX: inputMatrix y: outputVector.
+			(prev_cost - cost) abs < (cost_threshold * prev_cost) ifTrue: [ 
+				weightsAllAlong add: weights ].
+			prev_cost := cost.
+			nth := nth + 1 ] ].
 
-^ weightsAllAlong 
+	^ weightsAllAlong
 ]
 
 { #category : #'as yet unclassified' }
 AISupportVectorMachinesSoftSGD >> sgdX: inputMatrix y: outputVector [
 
 	| ascent |
-	
-	weights := OrderedCollection new: inputMatrix shape1 withAll: 0.
-	1 to: maxEpochs do: [ :epoch |
+	weights := OrderedCollection new: inputMatrix numberOfColumns withAll: 0.
+	1 to: maxEpochs do: [ :epoch | 
 		inputMatrix shuffled.
 		outputVector shuffled.
 		inputMatrix doWithIndex: [ :x :ind | 
