@@ -73,6 +73,18 @@ AISupportVectorMachinesSoftSGD >> maxEpochs: aNumber [
 	maxEpochs := aNumber  
 ]
 
+{ #category : #'as yet unclassified' }
+AISupportVectorMachinesSoftSGD >> predict: inputMatrix [
+
+	| prediction |
+	prediction := self signFunction: inputMatrix.
+
+	^ prediction asOrderedCollection collect: [ :each | 
+		  each > 0 
+			  ifTrue: [ 1 ]
+			  ifFalse: [ -1 ] ]
+]
+
 { #category : #accessing }
 AISupportVectorMachinesSoftSGD >> regularizationStrenght: aNumber [ 
 	regularizationStrenght := aNumber 
@@ -86,7 +98,7 @@ AISupportVectorMachinesSoftSGD >> sgdWithStoppageCriterionX: inputMatrix y: outp
 	nth := 0.
 	prev_cost := Float infinity.
 	cost_threshold := 0.01.
-	weights := OrderedCollection new: inputMatrix size withAll: 0.
+	weights := OrderedCollection new: inputMatrix shape1 withAll: 0.
 	1 to: maxEpochs do: [ :epoch |
 		inputMatrix shuffled.
 		outputVector shuffled.
@@ -109,13 +121,22 @@ AISupportVectorMachinesSoftSGD >> sgdX: inputMatrix y: outputVector [
 
 	| ascent |
 	
-	weights := OrderedCollection new: inputMatrix size withAll: 0.
+	weights := OrderedCollection new: inputMatrix shape1 withAll: 0.
 	1 to: maxEpochs do: [ :epoch |
 		inputMatrix shuffled.
 		outputVector shuffled.
 		inputMatrix doWithIndex: [ :x :ind | 
 			ascent := self calculateCostGradientX: x y: (outputVector at: ind).
 			weights := weights - (learningRate * ascent) ] ]
+]
+
+{ #category : #'as yet unclassified' }
+AISupportVectorMachinesSoftSGD >> signFunction: inputMatrix [
+
+	| constraints |
+	constraints := inputMatrix collect: [ :e | (weights * e) sum].
+	
+
 ]
 
 { #category : #accessing }
