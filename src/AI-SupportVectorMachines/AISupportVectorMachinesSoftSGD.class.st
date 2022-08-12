@@ -76,13 +76,9 @@ AISupportVectorMachinesSoftSGD >> maxEpochs: aNumber [
 { #category : #'as yet unclassified' }
 AISupportVectorMachinesSoftSGD >> predict: inputMatrix [
 
-	| prediction |
-	prediction := self signFunction: inputMatrix.
+	^ self signFunction: inputMatrix
 
-	^ prediction asOrderedCollection collect: [ :each | 
-		  each > 0 
-			  ifTrue: [ 1 ]
-			  ifFalse: [ -1 ] ]
+
 ]
 
 { #category : #accessing }
@@ -133,10 +129,7 @@ AISupportVectorMachinesSoftSGD >> sgdX: inputMatrix y: outputVector [
 { #category : #'as yet unclassified' }
 AISupportVectorMachinesSoftSGD >> signFunction: inputMatrix [
 
-	| constraints |
-	constraints := inputMatrix collect: [ :e | (weights * e) sum].
-	
-
+	^inputMatrix collect: [ :row | ((row * weights) sum) sign ] 
 ]
 
 { #category : #accessing }

@@ -68,6 +68,25 @@ AISupportVectorMachinesSoftSGDTest >> testComputeCostXY [
 	self assert: res equals: 10021/3 "3340.333333333333"
 ]
 
+{ #category : #test }
+AISupportVectorMachinesSoftSGDTest >> testPredict [
+
+	| expectedOutput x testInput y actualOutput |
+	x := #( #( 1 0 0 ) #( 1 1 1 ) #( 1 3 3 ) #( 1 4 4 ) ).
+	y := #( 1 1 -1 -1 ).
+
+	testInput := #( #( 1 -1 -1 ) #( 1 5 5 ) #( 1 6 6 ) #( 1 7 7 ) ).
+	expectedOutput := #( 1 -1 -1 -1 ).
+	model regularizationStrenght: 10000.
+	model learningRate: 1e-6.
+	model maxEpochs: 5000.
+	model sgdWithStoppageCriterionX: x y: y.
+
+	actualOutput := model predict: testInput.
+	
+actualOutput with: expectedOutput do: [ :actual :expected | self assert: actual equals: expected ]
+]
+
 { #category : #tests }
 AISupportVectorMachinesSoftSGDTest >> testSgdWithStoppageCriterionRealisticExampleXY [
 
