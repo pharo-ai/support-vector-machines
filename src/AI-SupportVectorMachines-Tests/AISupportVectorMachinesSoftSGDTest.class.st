@@ -69,29 +69,7 @@ AISupportVectorMachinesSoftSGDTest >> testComputeCostXY [
 ]
 
 { #category : #test }
-AISupportVectorMachinesSoftSGDTest >> testPredict [
-
-	| expectedOutput x testInput y actualOutput |
-	x := AIMatrix from: #( #( 1 0 0 ) #( 1 1 1 ) #( 1 3 3 ) #( 1 4 4 ) ).
-	y := #( 1 1 -1 -1 ).
-
-	testInput := AIMatrix from:
-		             #( #( 1 -1 -1 ) #( 1 5 5 ) #( 1 6 6 ) #( 1 7 7 ) ).
-	expectedOutput := #( 1 -1 -1 -1 ).
-	model regularizationStrenght: 10000.
-	model learningRate: 1e-6.
-	model maxEpochs: 5000.
-	model sgdWithStoppageCriterionX: x y: y.
-
-	actualOutput := model predict: testInput.
-
-	actualOutput
-		with: expectedOutput
-		do: [ :actual :expected | self assert: actual equals: expected ]
-]
-
-{ #category : #tests }
-AISupportVectorMachinesSoftSGDTest >> testSgdWithStoppageCriterionRealisticExampleXY [
+AISupportVectorMachinesSoftSGDTest >> testFitXY [
 
 	| x y res |
 	x := AIMatrix from: #( #( 1 0 0 ) #( 1 1 1 ) #( 1 3 3 ) #( 1 4 4 ) ).
@@ -101,47 +79,31 @@ AISupportVectorMachinesSoftSGDTest >> testSgdWithStoppageCriterionRealisticExamp
 	model learningRate: 1e-6.
 	model maxEpochs: 5000.
 
-	res := model sgdWithStoppageCriterionX: x y: y.
+	res := model fitX: x y: y.
+	
 
 	model weights
 		with: #( 2.03034695 -0.5100166 -0.5100166 )
 		do: [ :real :expected | self assert: real closeTo: expected ]
 ]
 
-{ #category : #tests }
-AISupportVectorMachinesSoftSGDTest >> testSgdWithStoppageCriterionXY [
+{ #category : #test }
+AISupportVectorMachinesSoftSGDTest >> testPredict [
 
-	| x y res |
-	x := AIMatrix from: #( #( 1 2 3 ) #( 4 5 6 ) #( 7 8 9 ) ).
-	y := #( -1 1 1 ).
+	| expectedOutput x testInput y actualOutput |
+	x := AIMatrix from: #( #( 1 0 0 ) #( 1 1 1 ) #( 1 3 3 ) #( 1 4 4 ) ).
+	y := #( 1 1 -1 -1 ).
 
+	testInput := AIMatrix from: #( #( 1 -1 -1 ) #( 1 5 5 ) #( 1 6 6 ) #( 1 7 7 ) ).
+	expectedOutput := #( 1 -1 -1 -1 ).
 	model regularizationStrenght: 10000.
 	model learningRate: 1e-6.
 	model maxEpochs: 5000.
+	model fitX: x y: y.
 
-	res := model sgdWithStoppageCriterionX: x y: y.
+	actualOutput := model predict: testInput.
 
-	model weights
-		with: #( 1.44873055 0.23656344 -0.97560368 )
-		do: [ :real :expected | self assert: real closeTo: expected ]
-]
-
-{ #category : #tests }
-AISupportVectorMachinesSoftSGDTest >> testSgdXY [
-
-	"temporary"
-
-	| x y res |
-	x := AIMatrix from: #( #( 1 2 3 ) #( 4 5 6 ) #( 7 8 9 ) ).
-	y := #( -1 1 1 ).
-
-	model regularizationStrenght: 10000.
-
-	model learningRate: 1e-6.
-	model maxEpochs: 5000.
-	res := model sgdX: x y: y.
-
-	model weights
-		with: #( 1.44873055 0.23656344 -0.97560368 )
-		do: [ :real :expected | self assert: real closeTo: expected ]
+	actualOutput
+		with: expectedOutput
+		do: [ :actual :expected | self assert: actual equals: expected ]
 ]
