@@ -2,7 +2,7 @@
 I implement the soft margin of Support Vector Machines with Stochastic Gradient Descent.
 "
 Class {
-	#name : #AISupportVectorMachinesSoftSGD,
+	#name : #AISupportVectorMachines,
 	#superclass : #Object,
 	#instVars : [
 		'weights',
@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> calculateCostGradientX: inputMatrix y: outputVector [
+AISupportVectorMachines >> calculateCostGradientX: inputMatrix y: outputVector [
 
 	| distance dw di numberOfRows output input |
 	numberOfRows := inputMatrix size.
@@ -40,7 +40,7 @@ AISupportVectorMachinesSoftSGD >> calculateCostGradientX: inputMatrix y: outputV
 ]
 
 { #category : #'as yet unclassified' }
-AISupportVectorMachinesSoftSGD >> calculateDistancesForX: inputMatrix y: outputVector [
+AISupportVectorMachines >> calculateDistancesForX: inputMatrix y: outputVector [
 
 	| xDotWeights |
 	xDotWeights := inputMatrix collect: [ :row | (row * weights) sum ].
@@ -48,7 +48,7 @@ AISupportVectorMachinesSoftSGD >> calculateDistancesForX: inputMatrix y: outputV
 ]
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> computeCostX: inputMatrix y: outputVector [
+AISupportVectorMachines >> computeCostX: inputMatrix y: outputVector [
 
 	| numberOfRows distances hingeLoss cost |
 	numberOfRows := inputMatrix size.
@@ -63,38 +63,19 @@ AISupportVectorMachinesSoftSGD >> computeCostX: inputMatrix y: outputVector [
 	^ cost
 ]
 
-{ #category : #accessing }
-AISupportVectorMachinesSoftSGD >> learningRate: aNumber [ 
-	learningRate := aNumber  
-]
-
-{ #category : #accessing }
-AISupportVectorMachinesSoftSGD >> maxEpochs: aNumber [ 
-	maxEpochs := aNumber  
-]
-
 { #category : #'as yet unclassified' }
-AISupportVectorMachinesSoftSGD >> predict: inputMatrix [
+AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 
-	^ self signFunction: inputMatrix
-
-
-]
-
-{ #category : #accessing }
-AISupportVectorMachinesSoftSGD >> regularizationStrenght: aNumber [ 
-	regularizationStrenght := aNumber 
-]
-
-{ #category : #'as yet unclassified' }
-AISupportVectorMachinesSoftSGD >> sgdWithStoppageCriterionX: inputMatrix y: outputVector [
+	"Stochastic Gradient Descent With Stoppage Criterion"
 
 	| ascent nth prev_cost cost cost_threshold weightsAllAlong |
 	weightsAllAlong := OrderedCollection new.
 	nth := 0.
 	prev_cost := Float infinity.
 	cost_threshold := 0.01.
-	weights := OrderedCollection new: inputMatrix numberOfColumns withAll: 0.
+	weights := OrderedCollection
+		           new: inputMatrix first size
+		           withAll: 0.
 	1 to: maxEpochs do: [ :epoch | 
 		inputMatrix shuffled.
 		outputVector shuffled.
@@ -111,31 +92,41 @@ AISupportVectorMachinesSoftSGD >> sgdWithStoppageCriterionX: inputMatrix y: outp
 	^ weightsAllAlong
 ]
 
-{ #category : #'as yet unclassified' }
-AISupportVectorMachinesSoftSGD >> sgdX: inputMatrix y: outputVector [
+{ #category : #accessing }
+AISupportVectorMachines >> learningRate: aNumber [ 
+	learningRate := aNumber  
+]
 
-	| ascent |
-	weights := OrderedCollection new: inputMatrix numberOfColumns withAll: 0.
-	1 to: maxEpochs do: [ :epoch | 
-		inputMatrix shuffled.
-		outputVector shuffled.
-		inputMatrix doWithIndex: [ :x :ind | 
-			ascent := self calculateCostGradientX: x y: (outputVector at: ind).
-			weights := weights - (learningRate * ascent) ] ]
+{ #category : #accessing }
+AISupportVectorMachines >> maxEpochs: aNumber [ 
+	maxEpochs := aNumber  
 ]
 
 { #category : #'as yet unclassified' }
-AISupportVectorMachinesSoftSGD >> signFunction: inputMatrix [
+AISupportVectorMachines >> predict: inputMatrix [
+
+	^ self signFunction: inputMatrix
+
+
+]
+
+{ #category : #accessing }
+AISupportVectorMachines >> regularizationStrenght: aNumber [ 
+	regularizationStrenght := aNumber 
+]
+
+{ #category : #'as yet unclassified' }
+AISupportVectorMachines >> signFunction: inputMatrix [
 
 	^inputMatrix collect: [ :row | ((row * weights) sum) sign ] 
 ]
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> weights [
+AISupportVectorMachines >> weights [
 	^weights  
 ]
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> weights: aCollection [ 
+AISupportVectorMachines >> weights: aCollection [ 
 	weights := aCollection 
 ]
