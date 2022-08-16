@@ -94,7 +94,7 @@ AISupportVectorMachinesSoftSGDTest >> testPredict [
 	x := #( #( 1 0 0 ) #( 1 1 1 ) #( 1 3 3 ) #( 1 4 4 ) ).
 	y := #( 1 1 -1 -1 ).
 
-	testInput := AIMatrix from: #( #( 1 -1 -1 ) #( 1 5 5 ) #( 1 6 6 ) #( 1 7 7 ) ).
+	testInput := #( #( 1 -1 -1 ) #( 1 5 5 ) #( 1 6 6 ) #( 1 7 7 ) ).
 	expectedOutput := #( 1 -1 -1 -1 ).
 	model regularizationStrenght: 10000.
 	model learningRate: 1e-6.
