@@ -73,9 +73,9 @@ AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 	nth := 0.
 	prev_cost := Float infinity.
 	cost_threshold := 0.01.
-	weights := OrderedCollection
-		           new: inputMatrix first size
-		           withAll: 0.
+	weights := Array
+		new: inputMatrix first size
+		withAll: 0.
 	1 to: maxEpochs do: [ :epoch | 
 		inputMatrix shuffled.
 		outputVector shuffled.
