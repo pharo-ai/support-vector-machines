@@ -32,7 +32,7 @@ If you are new to baselines and Metacello, check out the [Baselines](https://git
 
 ## How to use it?
 
-Here's an example how to use soft margin SVM. For that open a Playground (CMD+OW) in your Pharo image and execute this code (CMD+A) and then (CMD+PP)
+Here's an example of how to use soft margin SVM. For that open a Playground (CMD+OW) in your Pharo image and execute this code (CMD+A) and then (CMD+PP)
 
 ```st
 inputMatrix := AIMatrix from: #( #( 1 0 0 ) #( 1 1 1 ) #( 1 3 3 ) #( 1 4 4 ) ).
