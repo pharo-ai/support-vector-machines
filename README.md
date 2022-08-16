@@ -31,3 +31,21 @@ spec
 If you are new to baselines and Metacello, check out the [Baselines](https://github.com/pharo-open-documentation/pharo-wiki/blob/master/General/Baselines.md) tutorial on Pharo Wiki.
 
 ## How to use it?
+
+Here's an example how to use soft margin SVM. For that open a Playground (CMD+OW) in your Pharo image and execute this code (CMD+A) and then (CMD+PP)
+
+```st
+inputMatrix := AIMatrix from: #( #( 1 0 0 ) #( 1 1 1 ) #( 1 3 3 ) #( 1 4 4 ) ).
+outputVector := #( 1 1 -1 -1 ).
+
+model := AISupportVectorMachinesSoftSGD new.
+model regularizationStrenght: 10000.
+model learningRate: 1e-6.
+model maxEpochs: 5000.
+
+model fitX: inputMatrix y: outputVector.
+
+testInput := AIMatrix from: #( #( 1 -1 -1 ) #( 1 5 5 ) #( 1 6 6 ) #( 1 7 7 ) ).
+
+model predict: testInput "an AIMatrix(1 -1 -1 -1)"
+```
