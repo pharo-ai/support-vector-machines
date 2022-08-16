@@ -49,3 +49,5 @@ testInput := AIMatrix from: #( #( 1 -1 -1 ) #( 1 5 5 ) #( 1 6 6 ) #( 1 7 7 ) ).
 
 model predict: testInput "an AIMatrix(1 -1 -1 -1)"
 ```
+
+To understand this example and the soft margin svm in general please refer to our [Wiki](https://github.com/pharo-ai/wiki/blob/master/wiki/MachineLearning/Support-Vector-Machines.md).
