@@ -2,7 +2,7 @@
 I implement the soft margin of Support Vector Machines with Stochastic Gradient Descent.
 "
 Class {
-	#name : #AISupportVectorMachinesSoftSGD,
+	#name : #AISupportVectorMachines,
 	#superclass : #Object,
 	#instVars : [
 		'weights',
@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> calculateCostGradientX: inputMatrix y: outputVector [
+AISupportVectorMachines >> calculateCostGradientX: inputMatrix y: outputVector [
 
 	| distance dw di numberOfRows output input |
 	numberOfRows := inputMatrix size.
@@ -40,7 +40,7 @@ AISupportVectorMachinesSoftSGD >> calculateCostGradientX: inputMatrix y: outputV
 ]
 
 { #category : #'as yet unclassified' }
-AISupportVectorMachinesSoftSGD >> calculateDistancesForX: inputMatrix y: outputVector [
+AISupportVectorMachines >> calculateDistancesForX: inputMatrix y: outputVector [
 
 	| xDotWeights |
 	xDotWeights := inputMatrix collect: [ :row | (row * weights) sum ].
@@ -48,7 +48,7 @@ AISupportVectorMachinesSoftSGD >> calculateDistancesForX: inputMatrix y: outputV
 ]
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> computeCostX: inputMatrix y: outputVector [
+AISupportVectorMachines >> computeCostX: inputMatrix y: outputVector [
 
 	| numberOfRows distances hingeLoss cost |
 	numberOfRows := inputMatrix size.
@@ -64,7 +64,7 @@ AISupportVectorMachinesSoftSGD >> computeCostX: inputMatrix y: outputVector [
 ]
 
 { #category : #'as yet unclassified' }
-AISupportVectorMachinesSoftSGD >> fitX: inputMatrix y: outputVector [
+AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 
 	"Stochastic Gradient Descent With Stoppage Criterion"
 
@@ -93,17 +93,17 @@ AISupportVectorMachinesSoftSGD >> fitX: inputMatrix y: outputVector [
 ]
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> learningRate: aNumber [ 
+AISupportVectorMachines >> learningRate: aNumber [ 
 	learningRate := aNumber  
 ]
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> maxEpochs: aNumber [ 
+AISupportVectorMachines >> maxEpochs: aNumber [ 
 	maxEpochs := aNumber  
 ]
 
 { #category : #'as yet unclassified' }
-AISupportVectorMachinesSoftSGD >> predict: inputMatrix [
+AISupportVectorMachines >> predict: inputMatrix [
 
 	^ self signFunction: inputMatrix
 
@@ -111,22 +111,22 @@ AISupportVectorMachinesSoftSGD >> predict: inputMatrix [
 ]
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> regularizationStrenght: aNumber [ 
+AISupportVectorMachines >> regularizationStrenght: aNumber [ 
 	regularizationStrenght := aNumber 
 ]
 
 { #category : #'as yet unclassified' }
-AISupportVectorMachinesSoftSGD >> signFunction: inputMatrix [
+AISupportVectorMachines >> signFunction: inputMatrix [
 
 	^inputMatrix collect: [ :row | ((row * weights) sum) sign ] 
 ]
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> weights [
+AISupportVectorMachines >> weights [
 	^weights  
 ]
 
 { #category : #accessing }
-AISupportVectorMachinesSoftSGD >> weights: aCollection [ 
+AISupportVectorMachines >> weights: aCollection [ 
 	weights := aCollection 
 ]

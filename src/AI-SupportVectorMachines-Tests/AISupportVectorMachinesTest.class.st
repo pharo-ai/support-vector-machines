@@ -2,7 +2,7 @@
 An AISupportVectorMachinesSoftSGDTest is a test class for testing the behavior of AISupportVectorMachinesSoftSGD
 "
 Class {
-	#name : #AISupportVectorMachinesSoftSGDTest,
+	#name : #AISupportVectorMachinesTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'model'
@@ -11,14 +11,14 @@ Class {
 }
 
 { #category : #running }
-AISupportVectorMachinesSoftSGDTest >> setUp [
+AISupportVectorMachinesTest >> setUp [
 	super setUp.
 	
-	model := AISupportVectorMachinesSoftSGD new
+	model := AISupportVectorMachines new
 ]
 
 { #category : #test }
-AISupportVectorMachinesSoftSGDTest >> testCalculateCostGradientXY [
+AISupportVectorMachinesTest >> testCalculateCostGradientXY [
 
 	| x y w res |
 	x := #( #( 1 2 3 ) #( 4 5 6 ) #( 7 8 9 ) ).
@@ -31,7 +31,7 @@ AISupportVectorMachinesSoftSGDTest >> testCalculateCostGradientXY [
 ]
 
 { #category : #test }
-AISupportVectorMachinesSoftSGDTest >> testCalculateDistancesForXY [
+AISupportVectorMachinesTest >> testCalculateDistancesForXY [
 
 	| x y w res |
 	x := #( #( 1 2 3 ) #( 4 5 6 ) #( 7 8 9 ) ).
@@ -43,7 +43,7 @@ AISupportVectorMachinesSoftSGDTest >> testCalculateDistancesForXY [
 ]
 
 { #category : #test }
-AISupportVectorMachinesSoftSGDTest >> testCalculateDistancesForXYForLittleNumbers [
+AISupportVectorMachinesTest >> testCalculateDistancesForXYForLittleNumbers [
 
 	| x y w res |
 	x := #( #( 1 2 3 ) #( 4 5 6 ) #( 7 8 9 ) ).
@@ -55,7 +55,7 @@ AISupportVectorMachinesSoftSGDTest >> testCalculateDistancesForXYForLittleNumber
 ]
 
 { #category : #test }
-AISupportVectorMachinesSoftSGDTest >> testComputeCostXY [
+AISupportVectorMachinesTest >> testComputeCostXY [
 
 	| x y w res |
 	x := #( #( 1 2 3 ) #( 4 5 6 ) #( 7 8 9 ) ).
@@ -69,7 +69,7 @@ AISupportVectorMachinesSoftSGDTest >> testComputeCostXY [
 ]
 
 { #category : #test }
-AISupportVectorMachinesSoftSGDTest >> testFitXY [
+AISupportVectorMachinesTest >> testFitXY [
 
 	| x y res |
 	x := #( #( 1 0 0 ) #( 1 1 1 ) #( 1 3 3 ) #( 1 4 4 ) ).
@@ -88,7 +88,7 @@ AISupportVectorMachinesSoftSGDTest >> testFitXY [
 ]
 
 { #category : #test }
-AISupportVectorMachinesSoftSGDTest >> testPredict [
+AISupportVectorMachinesTest >> testPredict [
 
 	| expectedOutput x testInput y actualOutput |
 	x := #( #( 1 0 0 ) #( 1 1 1 ) #( 1 3 3 ) #( 1 4 4 ) ).
