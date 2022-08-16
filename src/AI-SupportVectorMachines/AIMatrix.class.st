@@ -1,3 +1,6 @@
+"
+I implement a matrix for Suport Vector Machines using the Array class (and not the Array2D class)
+"
 Class {
 	#name : #AIMatrix,
 	#superclass : #Array,
