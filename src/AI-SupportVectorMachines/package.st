@@ -1,1 +1,1 @@
-Package { #name : #'AI-SupportVectorMachines' }
+Package { #name : 'AI-SupportVectorMachines' }
