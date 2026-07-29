@@ -2,22 +2,29 @@
 An AISupportVectorMachinesSoftSGDTest is a test class for testing the behavior of AISupportVectorMachinesSoftSGD
 "
 Class {
-	#name : #AISupportVectorMachinesTest,
-	#superclass : #TestCase,
+	#name : 'AISupportVectorMachinesTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'model'
 	],
-	#category : #'AI-SupportVectorMachines-Tests'
+	#category : 'AI-SupportVectorMachines-Tests',
+	#package : 'AI-SupportVectorMachines-Tests'
 }
 
-{ #category : #running }
+{ #category : 'accessing' }
+AISupportVectorMachinesTest >> defaultComparisonPrecision [
+
+	^ 1e-4
+]
+
+{ #category : 'running' }
 AISupportVectorMachinesTest >> setUp [
 	super setUp.
 	
 	model := AISupportVectorMachines new
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 AISupportVectorMachinesTest >> testCalculateCostGradientXY [
 
 	| x y w res |
@@ -30,7 +37,7 @@ AISupportVectorMachinesTest >> testCalculateCostGradientXY [
 	self assert: res asArray equals: {(10009/3). (20006/3). 10001} asArray
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 AISupportVectorMachinesTest >> testCalculateDistancesForXY [
 
 	| x y w res |
@@ -42,7 +49,7 @@ AISupportVectorMachinesTest >> testCalculateDistancesForXY [
 	self assert: res equals: #( -859 -2331 -4055 )
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 AISupportVectorMachinesTest >> testCalculateDistancesForXYForLittleNumbers [
 
 	| x y w res |
@@ -54,7 +61,7 @@ AISupportVectorMachinesTest >> testCalculateDistancesForXYForLittleNumbers [
 	self assert: res equals: #( 1 -27 -91 )
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 AISupportVectorMachinesTest >> testComputeCostXY [
 
 	| x y w res |
@@ -68,7 +75,7 @@ AISupportVectorMachinesTest >> testComputeCostXY [
 	self assert: res equals: 10021/3 "3340.333333333333"
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 AISupportVectorMachinesTest >> testFitXY [
 
 	| x y res |
@@ -87,7 +94,7 @@ AISupportVectorMachinesTest >> testFitXY [
 		do: [ :real :expected | self assert: real closeTo: expected ]
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 AISupportVectorMachinesTest >> testPredict [
 
 	| expectedOutput x testInput y actualOutput |

@@ -2,27 +2,27 @@
 I implement the soft margin of Support Vector Machines with Stochastic Gradient Descent.
 "
 Class {
-	#name : #AISupportVectorMachines,
-	#superclass : #Object,
+	#name : 'AISupportVectorMachines',
+	#superclass : 'Object',
 	#instVars : [
 		'weights',
 		'regularizationStrenght',
 		'maxEpochs',
 		'learningRate'
 	],
-	#category : #'AI-SupportVectorMachines'
+	#category : 'AI-SupportVectorMachines',
+	#package : 'AI-SupportVectorMachines'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 AISupportVectorMachines >> calculateCostGradientX: inputMatrix y: outputVector [
 
-	| distance dw di numberOfRows output input |
-	numberOfRows := inputMatrix size.
+	| distance dw di output input |
 
 	outputVector isCollection
 		ifTrue: [ output := outputVector.
 			input := inputMatrix ]
-		ifFalse: [ output := outputVector asOrderedCollection.
+		ifFalse: [ output := OrderedCollection with: outputVector.
 			input := Array with: inputMatrix ].
 
 	distance := self calculateDistancesForX: input y: output.
@@ -39,7 +39,7 @@ AISupportVectorMachines >> calculateCostGradientX: inputMatrix y: outputVector [
 	^ dw
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AISupportVectorMachines >> calculateDistancesForX: inputMatrix y: outputVector [
 
 	| xDotWeights |
@@ -47,7 +47,7 @@ AISupportVectorMachines >> calculateDistancesForX: inputMatrix y: outputVector [
 	^ 1 - (outputVector * xDotWeights)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 AISupportVectorMachines >> computeCostX: inputMatrix y: outputVector [
 
 	| numberOfRows distances hingeLoss cost |
@@ -63,12 +63,14 @@ AISupportVectorMachines >> computeCostX: inputMatrix y: outputVector [
 	^ cost
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 
 	"Stochastic Gradient Descent With Stoppage Criterion"
 
-	| ascent nth prev_cost cost cost_threshold weightsAllAlong |
+	| input output ascent nth prev_cost cost cost_threshold weightsAllAlong |
+	input := inputMatrix copy.
+	output := outputVector copy.
 	weightsAllAlong := OrderedCollection new.
 	nth := 0.
 	prev_cost := Float infinity.
@@ -76,9 +78,9 @@ AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 	weights := Array
 		new: inputMatrix first size
 		withAll: 0.
-	1 to: maxEpochs do: [ :epoch | 
-		inputMatrix shuffled.
-		outputVector shuffled.
+	1 to: maxEpochs do: [ :epoch |
+		input := input shuffled.
+		output := output shuffled.
 		inputMatrix doWithIndex: [ :x :ind | 
 			ascent := self calculateCostGradientX: x y: (outputVector at: ind).
 			weights := weights - (learningRate * ascent) ].
@@ -92,17 +94,17 @@ AISupportVectorMachines >> fitX: inputMatrix y: outputVector [
 	^ weightsAllAlong
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 AISupportVectorMachines >> learningRate: aNumber [ 
 	learningRate := aNumber  
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 AISupportVectorMachines >> maxEpochs: aNumber [ 
 	maxEpochs := aNumber  
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AISupportVectorMachines >> predict: inputMatrix [
 
 	^ self signFunction: inputMatrix
@@ -110,23 +112,23 @@ AISupportVectorMachines >> predict: inputMatrix [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 AISupportVectorMachines >> regularizationStrenght: aNumber [ 
 	regularizationStrenght := aNumber 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AISupportVectorMachines >> signFunction: inputMatrix [
 
 	^inputMatrix collect: [ :row | ((row * weights) sum) sign ] 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 AISupportVectorMachines >> weights [
 	^weights  
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 AISupportVectorMachines >> weights: aCollection [ 
 	weights := aCollection 
 ]
